@@ -1,0 +1,207 @@
+Manifest-Version: 1.0
+Created-By: 1.8.0_401 (IBM Corporation)
+
+Name: licenses/LI_fr
+SHA-256-Digest: d0Zb0bKMaTK+8LrSnIl1WxZBouQzWcBIDUM5HMgzRIc=
+
+Name: java/lib/modules/jakarta/com.ibm.mq.jakarta.client.jar
+SHA-256-Digest: 2VxxrdR+cNDDvUG5tw/gsHbmZ4Rcwulhttil/H3uGYM=
+
+Name: java/lib/bcprov-jdk18on.jar
+SHA-256-Digest: rdWRXmrPxqtYNuH9il4hxkiFNqjB8h84bus78oC3Atc=
+
+Name: java/lib/modules/javax/fscontext.jar
+SHA-256-Digest: FzSz7BaoadLYpl/Lq1lDzP8tU8i0gFcnNktbicTM+dc=
+
+Name: java/lib/jca/wmq.jakarta.jmsra.rar
+SHA-256-Digest: bMiPE85M9GJsJJHNfaqQEUZL9lcVsZRni1+/R7jVlV4=
+
+Name: licenses/LA_ja
+SHA-256-Digest: ZgwyljY+YoCXW/REtoX/oWAIihIDFAWODgyedWd0mhk=
+
+Name: licenses/LA_zh_TW
+SHA-256-Digest: AeC1V3lqg45JdDE++SXbteV3nIYmvTR/r3HcOfbpkXM=
+
+Name: licenses/LI_sl
+SHA-256-Digest: 5lKQX0Y0F+1IGg62PoM0yCnd8MAhX7zR0EIDp05BKlA=
+
+Name: java/lib/modules/jakarta/bcpkix-jdk18on.jar
+SHA-256-Digest: S0jqCE5SMrnXnryhiHud4DexJJMYB81gcQdIwq7gjMk=
+
+Name: java/lib/modules/jakarta/org.json.jar
+SHA-256-Digest: PPbNaJLjLitMHDng9S9SSKL1s3ZG/fu3mma0a2GEFO0=
+
+Name: licenses/LA_fr
+SHA-256-Digest: YNhGuNFRWCMDiHqBXA8BM5XtemGc8nx8lVmqlgX6ul8=
+
+Name: licenses/LI_ru
+SHA-256-Digest: /04BRVkWY0CuVz0Wg4CSEJZ/2jkzYLDxWBWOeyhOeRc=
+
+Name: licenses/LA_ru
+SHA-256-Digest: Uwg/FwDgKM7rj5RB61BvuVn1dOaRGPHTaDS0hO74P7A=
+
+Name: java/lib/modules/jakarta/bcprov-jdk18on.jar
+SHA-256-Digest: rdWRXmrPxqtYNuH9il4hxkiFNqjB8h84bus78oC3Atc=
+
+Name: licenses/LI_cs
+SHA-256-Digest: w7QlA36bsLV6codw1GP+GR1ca8/+iRSy58XVznAm7js=
+
+Name: java/lib/providerutil.jar
+SHA-256-Digest: wBx93SbKlnu7orz1+EnXyIXHTyV3Cy2AJV77Qk8jbak=
+
+Name: licenses/LA_sl
+SHA-256-Digest: l/cJhs81NbAffwvmAvxt42aL84PR4TEX8u/Ks+uHW54=
+
+Name: java/lib/jms.jar
+SHA-256-Digest: ySoojvAlqPtunvjDYUYsLvfLrIL2I+9c7CyvDUBcRd0=
+
+Name: licenses/LA_cs
+SHA-256-Digest: K2CKsAPSUckejquhTL/dgpbWsnu1LoW6oGJ5YeWcknY=
+
+Name: licenses/LI_zh_TW
+SHA-256-Digest: y/afFIqblCMhawMJ+7i4Qe0EqlXcsuFfRg3BLZ0+zwI=
+
+Name: licenses/LI_ko
+SHA-256-Digest: OIhz8XDKCFDM8FAeFb5t1AmGxSgKzroGvIN1lbA+6QQ=
+
+Name: licenses/LA_ko
+SHA-256-Digest: E4tuWxrjHYcMSpWHxTB6MBXWVibtz4FgRZGyycVFjwI=
+
+Name: java/lib/jca/wmq.jmsra.ivt.ear
+SHA-256-Digest: gPbyxkHE0atDgpAH8OAEFTwXoX9y/M1yOWvs/vadM2g=
+
+Name: licenses/LA_de
+SHA-256-Digest: mdByYiKgjXPiJ1+1tyhBadZgNSiRuAJ3c/wpDzJ9gSw=
+
+Name: java/lib/jca/wmq.jmsra.rar
+SHA-256-Digest: wuh7JqmOM56BPgrHd/TYSUo/ZALe9pzhUSPplya2t+o=
+
+Name: licenses/LA_pl
+SHA-256-Digest: daQwcTCHB+nBP83Xw84VuazqFxZcEYHn2Jax5uhWgDA=
+
+Name: licenses/non_ibm_license
+SHA-256-Digest: 1y6ayW331YG4t6ktBhCWK1UcDAVNaZyiZt1xUXHQkmA=
+
+Name: java/lib/com.ibm.mq.jakarta.client.jar
+SHA-256-Digest: 2VxxrdR+cNDDvUG5tw/gsHbmZ4Rcwulhttil/H3uGYM=
+
+Name: licenses/LA_tr
+SHA-256-Digest: ieAB2/pQVXFRMjeLvVnnWkfE8JgvxW5ZHsijTxC1kLM=
+
+Name: java/lib/modules/javax/bcprov-jdk18on.jar
+SHA-256-Digest: rdWRXmrPxqtYNuH9il4hxkiFNqjB8h84bus78oC3Atc=
+
+Name: java/lib/modules/javax/jms.jar
+SHA-256-Digest: ySoojvAlqPtunvjDYUYsLvfLrIL2I+9c7CyvDUBcRd0=
+
+Name: java/lib/modules/javax/org.json.jar
+SHA-256-Digest: PPbNaJLjLitMHDng9S9SSKL1s3ZG/fu3mma0a2GEFO0=
+
+Name: java/lib/modules/jakarta/bcutil-jdk18on.jar
+SHA-256-Digest: 2fpW+XsPdhzjvI2ddMXXE3qYe/W9Or/hAD+br6RaHS8=
+
+Name: licenses/LI_pl
+SHA-256-Digest: 62XbTG1fxPk5s4o6yRkg2Vf8fwalUpLn+uYkK1unfVI=
+
+Name: java/lib/modules/javax/providerutil.jar
+SHA-256-Digest: wBx93SbKlnu7orz1+EnXyIXHTyV3Cy2AJV77Qk8jbak=
+
+Name: licenses/LI_tr
+SHA-256-Digest: +H+z+aOt2v9pyvkI7dvBm/rE6oIEMaoQXXW8d4l2t+s=
+
+Name: java/lib/modules/jakarta/fscontext.jar
+SHA-256-Digest: FzSz7BaoadLYpl/Lq1lDzP8tU8i0gFcnNktbicTM+dc=
+
+Name: licenses/notices
+SHA-256-Digest: u0d2oXfadl1McxryLBs18EtVaCz7G5pobLJcQIMZjVs=
+
+Name: java/lib/modules/javax/com.ibm.mq.allclient.jar
+SHA-256-Digest: M4MHuMBl+fMoxNdhzUFF5LfyQ6AmpSoBHVTruZAXve0=
+
+Name: licenses/LI_de
+SHA-256-Digest: Rqt5AakkHnLcoPMDDA4SNzXtQTcDvL3VBPtGl6W4nYQ=
+
+Name: licenses/LA_lt
+SHA-256-Digest: ws4DBPPbgcJyJ6JGx1Axj7UQXmmTzpvgbaPbC3kz4zk=
+
+Name: licenses/LI_pt
+SHA-256-Digest: 4FtbCrw7tq5n14OO/ht1FT6fyhC/GDCK0drjsUILBgY=
+
+Name: licenses/LA_pt
+SHA-256-Digest: donX4oCn+pal6VTsbP7qACyQAgXTAb6uFflHF2ygh4o=
+
+Name: licenses/LI_lt
+SHA-256-Digest: xJu4GJOjcSyOAs7sUEfu17RRoOScOkKqdheoOCsDQME=
+
+Name: java/lib/modules/jakarta/providerutil.jar
+SHA-256-Digest: wBx93SbKlnu7orz1+EnXyIXHTyV3Cy2AJV77Qk8jbak=
+
+Name: licenses/LI_it
+SHA-256-Digest: KcTXCCNs4qOqIuSvOSWLMeZ3JB9unaWQC0njBJWpnSk=
+
+Name: java/lib/modules/jakarta/jakarta.jms-api.jar
+SHA-256-Digest: r3kE/hOV85ZNi5CcLrcNERjfnOELWz1GArLghkGMSkY=
+
+Name: java/lib/jca/wmq.jakarta.jmsra.ivt.ear
+SHA-256-Digest: VfzpE+4W3AvlYIV0lvpfuu+l/kwDaUdGzlL+CQbBY0c=
+
+Name: licenses/LI_es
+SHA-256-Digest: 6kahSkDf4zqKBZEMxA1KtoGK6UvXTCb0kdbbNQViRhI=
+
+Name: licenses/LI_zh
+SHA-256-Digest: rYrq4TSqpH3eHBjOOOzF0aA92znmcLFfSuamzsjKEiA=
+
+Name: java/lib/modules/javax/bcutil-jdk18on.jar
+SHA-256-Digest: 2fpW+XsPdhzjvI2ddMXXE3qYe/W9Or/hAD+br6RaHS8=
+
+Name: java/lib/jakarta.jms-api.jar
+SHA-256-Digest: r3kE/hOV85ZNi5CcLrcNERjfnOELWz1GArLghkGMSkY=
+
+Name: java/lib/org.json.jar
+SHA-256-Digest: PPbNaJLjLitMHDng9S9SSKL1s3ZG/fu3mma0a2GEFO0=
+
+Name: java/lib/com.ibm.mq.allclient.jar
+SHA-256-Digest: M4MHuMBl+fMoxNdhzUFF5LfyQ6AmpSoBHVTruZAXve0=
+
+Name: java/lib/bcpkix-jdk18on.jar
+SHA-256-Digest: S0jqCE5SMrnXnryhiHud4DexJJMYB81gcQdIwq7gjMk=
+
+Name: java/lib/bcutil-jdk18on.jar
+SHA-256-Digest: 2fpW+XsPdhzjvI2ddMXXE3qYe/W9Or/hAD+br6RaHS8=
+
+Name: licenses/LI_ja
+SHA-256-Digest: wBwWLU7ovfzVE2vk0JhrFCsNLCPvRoMdBQFU2n/BaGY=
+
+Name: java/lib/fscontext.jar
+SHA-256-Digest: FzSz7BaoadLYpl/Lq1lDzP8tU8i0gFcnNktbicTM+dc=
+
+Name: licenses/LA_it
+SHA-256-Digest: CQ8z8P+Dk8KH7f+cSIT+USrmdh2/3pcqJNlqIDUI8LA=
+
+Name: licenses/LA_es
+SHA-256-Digest: MhNqKVUdKj4ZHHLmOYiX33yJYIAFDi7ZemKBYsnboLQ=
+
+Name: licenses/LA_zh
+SHA-256-Digest: bCBIcSzHTg4ZmBtijo8WQjQzK3jUVC5s0FrdOs0o704=
+
+Name: licenses/LA_el
+SHA-256-Digest: 5CP+KpxWfXPOy0tk35jkVLoSdu/h+RnjFu5Fqu4JUsM=
+
+Name: licenses/LA_en
+SHA-256-Digest: QnBLE6zNfo2QXYRymn4TNfiCldT9xf2+bbnj94bz/po=
+
+Name: licenses/LI_in
+SHA-256-Digest: MlUoNUXyAVg6d/HEuj6vq4SrejJ2CUiF7/iH7UBnQbE=
+
+Name: java/lib/modules/javax/bcpkix-jdk18on.jar
+SHA-256-Digest: S0jqCE5SMrnXnryhiHud4DexJJMYB81gcQdIwq7gjMk=
+
+Name: licenses/LI_el
+SHA-256-Digest: bNaYUGNY3rQWNHTdRyAMQQ6iYCNOTNELZ0Oy+Ci8N8s=
+
+Name: licenses/LA_in
+SHA-256-Digest: J6x0HQGUZgdeigKeBnU3+58xcuX2MgJOmvQWYxoCJp0=
+
+Name: licenses/LI_en
+SHA-256-Digest: X8Nre8t5Ua16Ey1TbSPu4NovZrSrjilMA/WWRu9ZLnw=
+
