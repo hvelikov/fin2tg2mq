@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+
+        http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
+
+    <!--<context:property-placeholder location="classpath:application.properties" />-->
+
+    <!-- define the jasypt properties parser with the given password to be used -->
+    <bean id="jasypt" class="org.apache.camel.component.jasypt.JasyptPropertiesParser">
+        <property name="password" value="${UFX_PARSER_KEY}"/>
+    </bean>
+
+    <bean id="ufxDataSource" class="oracle.jdbc.pool.OracleDataSource">
+        <property name="URL" value="${ufx.url}"/>
+        <property name="user" value="${ufx.username}"/>
+        <property name="password" value="${ufx.password}"/>
+    </bean>
+
+    <bean id="ufxTtxManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="ufxDataSource"/>
+    </bean>
+
+    <bean id="required" class="org.apache.camel.spring.spi.SpringTransactionPolicy">
+        <property name="transactionManager" ref="ufxTtxManager"/>
+        <property name="propagationBehaviorName" value="PROPAGATION_REQUIRED"/>
+    </bean>
+
+    <bean id="ufxConfigMatcher" class="bg.comsoft.uxf.loader.UfxConfigMatcher" init-method="initTandemConfigs">
+        <property name="dataSource" ref="ufxDataSource"/>
+    </bean>
+
+
+    <!-- Processor-->
+    <bean id="ufxProcessor" class="bg.comsoft.uxf.loader.UFXProcessor">
+        <property name="fileTableName" value="WAY4_UFX_FILES"/>
+        <property name="transactionTableName" value="WAY4_UFX_TRANS"/>
+    </bean>
+    <bean id="ufxExportListLoader" class="bg.comsoft.uxf.loader.UfxExportListProcessor"/>
+
+    <bean id="ufxProcessorNew" class="bg.comsoft.uxf.loader.UFXProcessor">
+        <property name="fileTableName" value="${ufx.file.table.new}"/>
+        <property name="transactionTableName" value="${ufx.transaction.table.new}"/>
+    </bean>
+
+    <bean id="databaseHelper" class="bg.comsoft.uxf.loader.UFXDatabaseHelper">
+        <property name="dataSource" ref="ufxDataSource"/>
+        <property name="ufxTransactionTable" value="WAY4_UFX_TRANS"/>
+    </bean>
+
+    <bean id="databaseHelperNew" class="bg.comsoft.uxf.loader.UFXDatabaseHelper">
+        <property name="dataSource" ref="ufxDataSource"/>
+        <property name="ufxTransactionTable" value="${ufx.transaction.table.new}"/>
+    </bean>
+
+    <!-- File filter -->
+    <bean id="ufxAntFilter" class="org.apache.camel.component.file.AntPathMatcherGenericFileFilter">
+        <property name="includes" value="**/OIC_Documents_*.xml"/>
+    </bean>
+
+    <bean id="pgpFormater" class="bg.comsoft.uxf.crypto.CryptoDataFormat"/>
+
+    <camelContext id="ufxContext" xmlns="http://camel.apache.org/schema/spring" autoStartup="true">
+
+        <propertyPlaceholder id="ufxProperties" location="classpath:application.properties"
+                             propertiesParserRef="jasypt"/>
+        <streamCaching id="myCacheConfig" bufferSize="16384" spoolDirectory="{{ufx.tmpdir}}" spoolThreshold="65536"
+                       spoolChiper="AES/CTR/NoPadding"/>
+
+
+        <errorHandler id="defaultUFXErrh" type="DefaultErrorHandler">
+            <redeliveryPolicy maximumRedeliveries="100" retryAttemptedLogLevel="WARN" redeliveryDelay="15000"
+                              logRetryAttempted="true"
+                              backOffMultiplier="1" useExponentialBackOff="true" logStackTrace="false"/>
+        </errorHandler>
+
+        <onException>
+            <exception>java.sql.SQLIntegrityConstraintViolationException</exception>
+            <exception>java.io.FileNotFoundException</exception>
+            <exception>org.jdom2.input.JDOMParseException</exception>
+            <redeliveryPolicy maximumRedeliveries="0"/>
+            <stop/>
+        </onException>
+
+        <route id="ufxFileLoad" autoStartup="true" trace="false" streamCache="true" errorHandlerRef="defaultUFXErrh">
+            <from id="fromClFile" uri="{{ufx.base}}{{ufx.from}}"/>
+            <log message=" ************************************************************ "/>
+            <log message=" *   Route File: ${header.CamelFileName}                      *"/>
+            <log message=" ************************************************************ "/>
+
+            <choice>
+                <when>
+                    <simple>{{ufx.encrypted}} == 'true'</simple>
+                    <log message=" *   Encrypted File: ${header.CamelFileName}                      *"/>
+                    <unmarshal>
+                        <custom ref="pgpFormater"/>
+                    </unmarshal>
+                    <!--<unmarshal>-->
+                    <!--<pgp keyFileName="{{ufx.key}}" password="{{ufx.key.pwd}}"/>-->
+                    <!--</unmarshal>-->
+                    <log message=" *   Encrypted   *"/>
+                </when>
+            </choice>
+
+            <transacted/>
+            <!-- <rollback> -->
+            <log message="creating Temporary table"/>
+            <bean ref="databaseHelper" method="createTemporaryTable"/>
+            <log message="created Temporary table"/>
+            <log message="started parsing file"/>
+            <process ref="ufxProcessor"/>
+            <log message="ended parsing file"/>
+            <log message="started transferring to main table"/>
+            <bean ref="databaseHelper" method="transferTransactions"/>
+            <log message="ended transferring to main table"/>
+            <log message="Completed File: ${header.CamelFileName} "/>
+        </route>
+
+        <route id="ufxFileLoadSecond" autoStartup="true" trace="false" streamCache="true" errorHandlerRef="defaultUFXErrh">
+            <from id="fromClFile" uri="{{ufx.base}}{{ufx.from.second}}"/>
+            <log message=" ************************************************************ "/>
+            <log message=" *   Route File: ${header.CamelFileName}                      *"/>
+            <log message=" ************************************************************ "/>
+
+            <choice>
+                <when>
+                    <simple>{{ufx.encrypted}} == 'true'</simple>
+                    <log message=" *   Encrypted File: ${header.CamelFileName}                      *"/>
+                    <unmarshal>
+                        <custom ref="pgpFormater"/>
+                    </unmarshal>
+                    <!--<unmarshal>-->
+                    <!--<pgp keyFileName="{{ufx.key}}" password="{{ufx.key.pwd}}"/>-->
+                    <!--</unmarshal>-->
+                    <log message=" *   Encrypted   *"/>
+                </when>
+            </choice>
+
+            <transacted/>
+            <!-- <rollback> -->
+            <log message="creating Temporary table"/>
+            <bean ref="databaseHelperNew" method="createTemporaryTable"/>
+            <log message="created Temporary table"/>
+            <log message="started parsing file"/>
+            <process ref="ufxProcessorNew"/>
+            <log message="ended parsing file"/>
+            <log message="started transferring to main table"/>
+            <bean ref="databaseHelperNew" method="transferTransactions"/>
+            <log message="ended transferring to main table"/>
+            <log message="Completed File: ${header.CamelFileName} "/>
+        </route>
+
+        <route autoStartup="true" trace="true" streamCache="true">
+            <from id="fromCryptFile" uri="{{ufx.base}}input/ToDecrypt?delete=true"/>
+            <log message=" ************************************************************ "/>
+            <log message=" *   Decrypt: ${header.CamelFileName}                         *"/>
+            <log message=" ************************************************************ "/>
+            <!--<process ref="pgpProcessorDec"/>-->
+            <!--   <unmarshal>
+                <pgp keyFileName="{{ufx.key}}" password="{{ufx.key.pwd}}"  provider="BC"/>
+            </unmarshal>-->
+            <unmarshal>
+                <custom ref="pgpFormater"/>
+            </unmarshal>
+            <to uri="{{ufx.base}}input/Decrypted"/>
+            <log message=" *  Decrypted   *"/>
+        </route>
+
+        <route autoStartup="true" trace="false" streamCache="true">
+            <from id="fromCryptFile" uri="{{ufx.base}}input/ToEncrypt?delete=true"/>
+            <log message=" ************************************************************ "/>
+            <log message=" *   Encrypt: ${header.CamelFileName}                      *"/>
+            <log message=" ************************************************************ "/>
+            <marshal>
+                <custom ref="pgpFormater"/>
+            </marshal>
+            <!--<marshal>-->
+            <!--<pgp keyFileName="{{ufx.pub.key}}" keyUserid="OW-BO-UFX-Enc-test_gnupgp" />-->
+            <!--</marshal>-->
+            <to uri="{{ufx.base}}input/Encrypted"/>
+            <log message=" *   Encrypted   *"/>
+        </route>
+
+        <route id="UfxExportListLoad" autoStartup="true" trace="true">
+            <from id="exportListDir" uri="{{ufx.list.from}}"/>
+            <log message=" ************************************************************ "/>
+            <log message=" *   Route File: ${header.CamelFileName}                      *"/>
+            <log message=" ************************************************************ "/>
+
+
+            <unmarshal>
+                <csv delimiter=";"/>
+            </unmarshal>
+
+            <bean ref="ufxExportListLoader" method="insertExportFile"/>
+
+            <marshal>
+                <csv delimiter=";"/>
+            </marshal>
+
+            <to uri="{{ufx.list.from}}/Archive"/>
+
+        </route>
+
+    </camelContext>
+    <import resource="classpath:META-INF/spring/spring-jasypt.xml"/>
+</beans>

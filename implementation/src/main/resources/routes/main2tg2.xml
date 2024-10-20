@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<routes id="camel">
+
+    <!--From fin processing get request from directory and send to target2 MQ  -->
+    <route id="tg2request" autoStartup="true" trace="true">
+        <onException>
+            <exception>java.lang.RuntimeException</exception>
+            <log message="Error routing!"/>
+            <redeliveryPolicy maximumRedeliveries="0"/>
+        </onException>
+        <from id="fromClFile" uri="{{fin.basedir}}{{fin.request.subdir}}"/>
+        <log message=" ************************************************************ "/>
+        <log message=" *   Route File: ${header.CamelFileName}                      *"/>
+        <log message=" ************************************************************ "/>
+        <transacted/>
+        <to uri="ibmmq:queue:{{ibm.mq.send.QueueName}}"/>
+        <log message="Ended transfer to MQ"/>
+        <log message="Completed File: ${header.CamelFileName} "/>
+    </route>
+
+    <!-- Simulate target2 processing. copy input massage to taget2 output queue  -->
+    <route id="answer" autoStartup="true" trace="true">
+        <transacted/>
+        <from uri="ibmmq:queue:{{ibm.mq.answer.QueueName}}"/>
+        <log message=" ************************************************************ "/>
+        <log message=" *   Process File: ${header.CamelFileName}                      *"/>
+        <log message=" ************************************************************ "/>
+        <to uri="{{fin.basedir}}{{fin.response.dir}}"/>
+    </route>
+
+    <!-- Simulate target2 processing. copy input massage to taget2 output queue  -->
+    <route id="processMq" autoStartup="true" trace="true">
+        <transacted/>
+        <from uri="ibmmq:queue:{{ibm.mq.send.QueueName}}"/>
+        <log message=" ************************************************************ "/>
+        <log message=" *   Response File from tg2: ${header.CamelFileName}                      *"/>
+        <log message=" ************************************************************ "/>
+        <to uri="ibmmq:queue:{{ibm.mq.answer.QueueName}}"/>
+    </route>
+
+
+</routes>

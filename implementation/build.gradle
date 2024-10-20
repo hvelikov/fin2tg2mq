@@ -22,6 +22,9 @@ dependencies {
 
     implementation 'org.apache.camel.quarkus:camel-quarkus-jta'
     implementation 'org.apache.camel.quarkus:camel-quarkus-jms'
+    implementation 'org.apache.camel.quarkus:camel-quarkus-xml-io-dsl'
+
+
     implementation 'io.quarkiverse.messaginghub:quarkus-pooled-jms'
 
     //implementation 'io.quarkiverse:quarkus-narayana-jta'

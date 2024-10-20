@@ -7,6 +7,8 @@ import io.quarkus.runtime.Startup;
 import io.quarkus.runtime.StartupEvent;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.event.Observes;
+import jakarta.inject.Inject;
+import org.apache.camel.CamelContext;
 import org.apache.camel.PropertyInject;
 import org.apache.camel.impl.event.CamelContextStartedEvent;
 import org.apache.camel.impl.event.CamelContextStoppedEvent;
@@ -43,9 +45,5 @@ public class AppLifecycleBean {
         System.out.println("******************");
         System.out.println("* Camel stopped  *");
         System.out.println("******************");
-    }
-    public String sayHello(@PropertyInject("quarkus.datasource.username") String msg) throws Exception {
-        // create a reply message which includes the hostname
-        return msg + " from " + InetAddressUtil.getLocalHostName();
     }
 }

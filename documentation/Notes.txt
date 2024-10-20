@@ -12,3 +12,12 @@
   https://192.168.22.12:9443/ibmmq/console
 
 manager QM1
+
+ufx.base=file://C://Borica//UFXtrans//TestData//
+ufx.tmpdir=C://Borica//UFXtrans//TestData//tmp
+ufx.from=input?move=Archive&moveFailed=error&filter=#ufxAntFilter&delay=15000&sortBy=file:modified
+#ufx.from=file:/u01/borkoadm/Data/input?move=done&moveFailed=error&filter=#ufxAntFilter&delay=15000&sortBy=file:name
+#ufx.to=file:/u01/borkoadm/Data/input/archive?fileName=${header.CamelFileName}.gz
+
+ufx.list.from=file://F://Way4AcsTest//input
+
