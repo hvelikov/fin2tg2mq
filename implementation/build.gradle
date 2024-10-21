@@ -19,16 +19,15 @@ dependencies {
     implementation 'org.apache.camel.quarkus:camel-quarkus-log'
     implementation 'org.apache.camel.quarkus:camel-quarkus-timer'
     implementation 'org.apache.camel.quarkus:camel-quarkus-file'
+    implementation 'org.apache.camel.quarkus:camel-quarkus-direct'
 
     implementation 'org.apache.camel.quarkus:camel-quarkus-jta'
     implementation 'org.apache.camel.quarkus:camel-quarkus-jms'
     implementation 'org.apache.camel.quarkus:camel-quarkus-xml-io-dsl'
 
+    implementation 'io.quarkus:quarkus-narayana-jta'
 
     implementation 'io.quarkiverse.messaginghub:quarkus-pooled-jms'
-
-    //implementation 'io.quarkiverse:quarkus-narayana-jta'
-
     implementation 'io.quarkus:quarkus-arc'
 
     dependencies { implementation name: 'com.ibm.mq.jakarta.client' }
