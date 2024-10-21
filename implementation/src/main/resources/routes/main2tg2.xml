@@ -5,59 +5,46 @@
     <route id="tg2request" autoStartup="true" trace="true">
         <onException>
             <exception>java.lang.RuntimeException</exception>
-            <exception>org.springframework.jms.IllegalStateException</exception>
-            <redeliveryPolicy maximumRedeliveries="5000" retryAttemptedLogLevel="WARN" redeliveryDelay="15000"
-                              logRetryAttempted="false"
-                              backOffMultiplier="1" useExponentialBackOff="true" logStackTrace="false"/>
-            <!--<continued><constant>true</constant></continued>-->
-            <!--<handled><constant>true</constant></handled>-->
-            <!--<rollback markRollbackOnly="true"/>-->
-        </onException>
+           <!-- <exception>org.springframework.jms.IllegalStateException</exception>-->
+            <redeliveryPolicy maximumRedeliveries="0" retryAttemptedLogLevel="WARN" redeliveryDelay="1000"
+                              logRetryAttempted="true"
+                              backOffMultiplier="1" useExponentialBackOff="false" logStackTrace="false"/>
+            </onException>
         <from id="fromClFile" uri="{{fin.basedir}}{{fin.request.subdir}}"/>
-        <log message=" **   Route input file: ${header.CamelFileName} "/>
-<!--
+        <log message=" ** Begin to send input file: ${header.CamelFileName}"/>
         <transacted/>
-        <log message=" **   Route input file: ${header.CamelFileName} "/>
-        <to uri="ibmmq:queue:{{ibm.mq.send.QueueName}}"/>
-        <log message="Completed file transfer to MQ: ${header.CamelFileName} &ndash;&gt; {{ibm.mq.send.QueueName}} queue."/>-->
-        <to uri="direct:toq"/>
-    </route>
-
-    <route>
-        <from uri="direct:toq"/>
-        <transacted/>
-        <log message=" **   Route input file: ${header.CamelFileName} "/>
         <to uri="ibmmq:queue:{{ibm.mq.send.QueueName}}"/>
         <log message="Completed file transfer to MQ: ${header.CamelFileName} --> {{ibm.mq.send.QueueName}} queue."/>
     </route>
 
-
-    <!-- Simulate target2 processing. copy input massage to taget2 output queue  -->
-   <!-- <route id="answer" autoStartup="true" trace="true">
+   <!-- Simulate target2 processing. copy input massage to taget2 output queue  -->
+    <route id="answer" autoStartup="true" trace="true">
         <onException>
             <exception>java.lang.RuntimeException</exception>
             <redeliveryPolicy maximumRedeliveries="5000" retryAttemptedLogLevel="WARN" redeliveryDelay="{{redelivery.interval}}}"
                               logRetryAttempted="true"
-                              backOffMultiplier="1" useExponentialBackOff="true" logStackTrace="false"/>
+                              backOffMultiplier="1" useExponentialBackOff="false" logStackTrace="false"/>
             </onException>
         <transacted/>
         <from uri="ibmmq:queue:{{ibm.mq.answer.QueueName}}"/>
-        <log message=" **   Response from tg2 queue name {{ibm.mq.send.QueueName}} &ndash;&gt; file:${header.CamelFileName} "/>
+        <log message=" **   Response from tg2 queue name {{ibm.mq.send.QueueName}} --> file:${header.CamelFileName} "/>
         <to uri="{{fin.basedir}}{{fin.response.dir}}"/>
-    </route>-->
+    </route>
 
     <!-- Simulate target2 processing. copy input massage to taget2 output queue  -->
-    <!--<route id="processMq" autoStartup="true" trace="true">
+    <route id="processMq" autoStartup="true" trace="true">
         <onException>
             <exception>java.lang.RuntimeException</exception>
-            <log message="Error routing!"/>
-            <redeliveryPolicy maximumRedeliveries="0" logStackTrace="false"  />
+            <!-- <exception>org.springframework.jms.IllegalStateException</exception>-->
+            <redeliveryPolicy maximumRedeliveries="0" retryAttemptedLogLevel="WARN" redeliveryDelay="1000"
+                              logRetryAttempted="true"
+                              backOffMultiplier="1" useExponentialBackOff="false" logStackTrace="false"/>
         </onException>
         <transacted/>
         <from uri="ibmmq:queue:{{ibm.mq.send.QueueName}}"/>
         <to uri="ibmmq:queue:{{ibm.mq.answer.QueueName}}"/>
         <log message=" !!!!! Development! Simulate processing. Move file to answer queue. File:${header.CamelFileName}"/>
-    </route>-->
+    </route>
 
 
 </routes>

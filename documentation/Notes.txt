@@ -21,3 +21,14 @@ ufx.from=input?move=Archive&moveFailed=error&filter=#ufxAntFilter&delay=15000&so
 
 ufx.list.from=file://F://Way4AcsTest//input
 
+
+<onException>
+            <exception>java.lang.RuntimeException</exception>
+            <exception>com.ibm.mq.jmqi.JmqiException</exception>
+            <redeliveryPolicy maximumRedeliveries="5000" retryAttemptedLogLevel="WARN" redeliveryDelay="15000"
+                              logRetryAttempted="true"
+                              backOffMultiplier="1" useExponentialBackOff="false" logStackTrace="false"/>
+            <!--<continued><constant>true</constant></continued>-->
+            <!--<handled><constant>true</constant></handled>-->
+            <!--<rollback markRollbackOnly="true"/>-->
+</onException>
