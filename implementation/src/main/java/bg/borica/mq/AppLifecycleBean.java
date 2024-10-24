@@ -27,6 +27,7 @@ public class AppLifecycleBean {
 
     @Startup
     void startup() {
+        System.setProperty("com.ibm.mq.cfg.useIBMCipherMappings", "false");
         Log.info("The application startup... ");
     }
 

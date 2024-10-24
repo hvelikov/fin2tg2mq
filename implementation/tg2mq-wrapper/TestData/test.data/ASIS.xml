@@ -1,0 +1,131 @@
+<Saa:DataPDU xmlns:Saa="urn:swift:saa:xsd:saa.2.0" xmlns:Sw="urn:swift:snl:ns.Sw" xmlns:SwInt="urn:swift:snl:ns.SwInt" xmlns:SwGbl="urn:swift:snl:ns.SwGbl" xmlns:SwSec="urn:swift:snl:ns.SwSec">
+    <Saa:Revision>2.0.6</Saa:Revision>
+    <Saa:Header>
+        <Saa:Message>
+            <Saa:SenderReference>OTRGTXEPMXXX998$241015162862</Saa:SenderReference>
+            <Saa:MessageIdentifier>pain.998.001.01</Saa:MessageIdentifier>
+            <Saa:Format>MX</Saa:Format>
+            <Saa:SubFormat>Output</Saa:SubFormat>
+            <Saa:Sender>
+                <Saa:DN>cn=rtgs,o=trgtxepm,o=swift</Saa:DN>
+                <Saa:FullName>
+                    <Saa:X1>TRGTXEPMXXX</Saa:X1>
+                </Saa:FullName>
+            </Saa:Sender>
+            <Saa:Receiver>
+                <Saa:DN>cn=b7backup,o=bsbgbgsf,o=swift</Saa:DN>
+                <Saa:FullName>
+                    <Saa:X1>BSBGBGSFXXX</Saa:X1>
+                </Saa:FullName>
+            </Saa:Receiver>
+            <Saa:InterfaceInfo>
+                <Saa:MessageCreator>SWIFTNetInterface</Saa:MessageCreator>
+                <Saa:MessageContext>Original</Saa:MessageContext>
+                <Saa:MessageNature>Financial</Saa:MessageNature>
+            </Saa:InterfaceInfo>
+            <Saa:NetworkInfo>
+                <Saa:Priority>Normal</Saa:Priority>
+                <Saa:IsPossibleDuplicate>false</Saa:IsPossibleDuplicate>
+                <Saa:Service>esmig.t2.iast!pu</Saa:Service>
+                <Saa:Network>SWIFTNet</Saa:Network>
+                <Saa:SessionNr>002979</Saa:SessionNr>
+                <Saa:SeqNr>000004994</Saa:SeqNr>
+                <Saa:SWIFTNetNetworkInfo>
+                    <Saa:RequestType>pain.998.001.01</Saa:RequestType>
+                    <Saa:SWIFTRef>swi01247-2024-10-15T07:02:01.51574.023167Z</Saa:SWIFTRef>
+                    <Saa:SNLRef>snp01244-2024-10-15T07:02:01.51574.023166Z</Saa:SNLRef>
+                    <Saa:SnFQueueName>bsbgbgsf_t2utestmsg!p</Saa:SnFQueueName>
+                    <Saa:SnFInputTime>0301:2024-10-15T07:02:01</Saa:SnFInputTime>
+                    <Saa:SnFDeliveryTime>2024-10-15T07:02:05Z</Saa:SnFDeliveryTime>
+                    <Saa:PayloadAttributes>
+                        <Saa:PayloadAttribute>
+                            <Saa:Name>ESMIGMessageId</Saa:Name>
+                            <Saa:Value>tgw102.43e4ccec-a2a7-41a2-8fed-f8c3a4a3dd5d</Saa:Value>
+                        </Saa:PayloadAttribute>
+                        <Saa:PayloadAttribute>
+                            <Saa:Name>SwCompression</Saa:Name>
+                            <Saa:Value>None</Saa:Value>
+                        </Saa:PayloadAttribute>
+                    </Saa:PayloadAttributes>
+                </Saa:SWIFTNetNetworkInfo>
+            </Saa:NetworkInfo>
+            <Saa:ExpiryDateTime>20241104070205</Saa:ExpiryDateTime>
+        </Saa:Message>
+    </Saa:Header>
+    <Saa:Body>
+        <AppHdr xmlns="urn:iso:std:iso:20022:tech:xsd:head.001.001.01">
+            <Fr>
+                <FIId>
+                    <FinInstnId>
+                        <BICFI>TRGTXEPMRTG</BICFI>
+                    </FinInstnId>
+                </FIId>
+            </Fr>
+            <To>
+                <FIId>
+                    <FinInstnId>
+                        <BICFI>BSBGBGSFXXX</BICFI>
+                    </FinInstnId>
+                </FIId>
+            </To>
+            <BizMsgIdr>59760303</BizMsgIdr>
+            <MsgDefIdr>pain.998.001.01</MsgDefIdr>
+            <CreDt>2024-10-15T07:02:01.204Z</CreDt>
+            <Sgntr>
+                <ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" Id="signature_26aba1e4-ddac-4f12-899c-8b98de1f5e52">
+                    <ds:SignedInfo>
+                        <ds:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
+                        <ds:SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256" />
+                        <ds:Reference URI="#keyinfo_9cadec08-bf9b-4c6b-8d20-b33b150954cf">
+                            <ds:Transforms>
+                                <ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
+                            </ds:Transforms>
+                            <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
+                            <ds:DigestValue>eu0ro4QfI25BHbCCDufwdOHS9EXyo2ibVdtr2ynCv9o=</ds:DigestValue>
+                        </ds:Reference>
+                        <ds:Reference URI="">
+                            <ds:Transforms>
+                                <ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" />
+                                <ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
+                            </ds:Transforms>
+                            <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
+                            <ds:DigestValue>Vm++k0+S4FjygHfG2aTtuFcd1Y3lU0+FK8CE3sxN6bs=</ds:DigestValue>
+                        </ds:Reference>
+                        <ds:Reference>
+                            <ds:Transforms>
+                                <ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
+                            </ds:Transforms>
+                            <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
+                            <ds:DigestValue>Q82ywKhNVGc1pVXoEi/6FyH7inG8ymzKonCX7eruRQo=</ds:DigestValue>
+                        </ds:Reference>
+                    </ds:SignedInfo>
+                    <ds:SignatureValue Id="signaturevalue_9aee4db5-9c13-45a9-9a77-730c48b15cf3">fd1MYC+By9kCn9QRT565u+vrWn5mm+k5Ir/gC1HSTR+aum1+0YWzFjp3rXv49QIvY3PU8kZmQ5z6nqA6EwgtfFog2Kh7AW9QUb2VoDVahRegl7iFvYu2In8vMcHOqV9af6DLdALoqPVXoy3/9yR2eWocS3Gs2yTmsq7Bot+a2TcE6AQaAM/VmltiWjG+osBocsFAHWirR+lArKgr7IUXztuI+ljXv3fq3gTSrzQQexDzje7L/dyLpWGm38vp0KvExuqonvndJJqyLhCfnCC60pKDvuho6BqTeMR6C8DSRIuBn7ZI2ltWgM5nUXYbttZ51UWYT0kpt10qWL1yVlF4Tg==</ds:SignatureValue>
+                    <ds:KeyInfo Id="keyinfo_9cadec08-bf9b-4c6b-8d20-b33b150954cf">
+                        <ds:X509Data>
+                            <ds:X509Certificate>MIIExTCCAq2gAwIBAgIEZMYIXDANBgkqhkiG9w0BAQsFADAQMQ4wDAYDVQQKEwVTV0lGVDAeFw0yMzA4MzEwOTA3MTlaFw0yNTA4MzEwOTM3MTlaMEYxDjAMBgNVBAoTBXN3aWZ0MREwDwYDVQQKEwh0cmd0eGVwbTEOMAwGA1UECxMFdXRlc3QxETAPBgNVBAMTCHN3aWZ0LXQyMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAsltIQ/7gCeCiiwMEaqz49L+krOFR5EUSS8+gYh5QWe6Y9cbhLIPdBdUhFV4CCd/BKdGw0YWYW3nur936rWXzuupVFn28E0BCfqSCjPFeRyw/T/WkC3XpRc5d00zbOfMT28htnCglXD+48CXyExh1ojKLPdeyQM8f9hrwOu9lWbNToOTEOiC4mExuvrMFpeCSe20mNdAZIJuFok/n7btYH96pzz5RM/Lu46pwPPDSsH7e89z3W9ONawZla9iRj41AE+/qFsb4vhrxAdq6SfXdPOOOSq0RJNrBSFCPO/1nZP96MOrKv96qWZKk87JgB9AVIPU/B+gb6gXnMRv6k2gzbQIDAQABo4HwMIHtMAsGA1UdDwQEAwIE8DAUBgNVHSAEDTALMAkGBysVBgMKZAIwNQYDVR0fBC4wLDAqoCigJqQkMCIxDjAMBgNVBAoTBVNXSUZUMRAwDgYDVQQDEwdDUkw1MjQzMCsGA1UdEAQkMCKADzIwMjMwODMxMDkwNzE5WoEPMjAyNTA4MzEwOTM3MTlaMB8GA1UdIwQYMBaAFFKjAShg2ZUnQeIQngmfq4PQ8ZZCMB0GA1UdDgQWBBQgjs5EzDN3K3f7uMH2I3p2CAGoCDAJBgNVHRMEAjAAMBkGCSqGSIb2fQdBAAQMMAobBFY4LjMDAgOoMA0GCSqGSIb3DQEBCwUAA4ICAQCruncOuKEcqvf7Z1XnJW5FfUbtinEs4/Z3/Fa3tgzUyRJBENniu4Q/emfMVSNejYq++4RBbSCXdR3/Q5jdN1lTPQKTiyZYipfQxGkXurXNC06uDx54g6tXOUoBiGWDf9ClbE8fHN+mqcMN6cbMKVPe3syuTgP3cvnEO8abxXnqHDpasNR7XVoKb5i+Sl/kWolrrARn9gIiZ50FZnbrweGJs+Spnh20JrSGXzVn/jYkR7G5dbDQ1P5lodygn9v49SY1W7lArtGs2g0ipotQb/Qurd/SIuG00mwd0BuhsXZYbX/D3rWzS8lE036Dn+gaSNAAI33/vpDSr/rdwmqLy9hqDEQs66iCefR8ZyDik/ZaFnwN+D/goFuAjQdRL17DBtGMoYr66IbWwAWKFSwc3tZK8bCHg+WzXfZpKLPIr9BbEpdT1ut+danfUTw3Rfvgu92h557ZDeSoDgZS8y0e3ye8XzR+BNbanhXVqQ+pVJMiszF0xc5UTnXXdrnLNifLG3c7AUVJwXmSFCumZ0KeY2Dl00vd0JMr7qoyUecVo2LXxZA7kQdHXYvx1dMQN4r+oTul5DlMTbzfFJwEaIwe49zhUy1KOk++Uu+DOfFqPrcs5MmgtwsTHEhksXn5OgQBwGFAaJmYWchxxyEJ3HNfYna65kB1MIb9MjoH9ABTDWQtGg==</ds:X509Certificate>
+                        </ds:X509Data>
+                    </ds:KeyInfo>
+                </ds:Signature>
+            </Sgntr>
+        </AppHdr>
+        <Document xmlns="urn:swift:xsd:$pain.998.001.01">
+            <pain.998.001.01>
+                <PrtryData>
+                    <Tp>ASInitiationStatus</Tp>
+                    <T2PrtryData>
+                        <GnlInf>
+                            <PmtInitnStsId>NONREF</PmtInitnStsId>
+                            <CreDtTm>2024-10-15T07:02:01.204+00:00</CreDtTm>
+                        </GnlInf>
+                        <OrgnlGrpRefInfAndSts>
+                            <GrpId>00000000000052473772</GrpId>
+                            <OrgnlMsgTp>ASTransferInitiation</OrgnlMsgTp>
+                            <SttlmMdlTp>B</SttlmMdlTp>
+                            <GrpSts>ACSC</GrpSts>
+                        </OrgnlGrpRefInfAndSts>
+                    </T2PrtryData>
+                </PrtryData>
+            </pain.998.001.01>
+        </Document>
+    </Saa:Body>
+</Saa:DataPDU>

@@ -26,11 +26,14 @@ dependencies {
     implementation 'org.apache.camel.quarkus:camel-quarkus-xml-io-dsl'
 
     implementation 'io.quarkus:quarkus-narayana-jta'
+    implementation 'io.quarkus:quarkus-rest-client-reactive-jsonb:'
 
     implementation 'io.quarkiverse.messaginghub:quarkus-pooled-jms'
     implementation 'io.quarkus:quarkus-arc'
 
-    dependencies { implementation name: 'com.ibm.mq.jakarta.client' }
+    implementation 'com.ibm.mq:com.ibm.mq.jakarta.client:9.3.4.1'
+
+    //dependencies { implementation name: 'com.ibm.mq.jakarta.client' }
     dependencies { implementation name: 'json-20220320' }
 
     testImplementation 'io.quarkus:quarkus-junit5'

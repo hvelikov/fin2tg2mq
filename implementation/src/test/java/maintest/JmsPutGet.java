@@ -66,6 +66,8 @@ public class JmsPutGet {
 
 
 		try {
+
+
 			// Create a connection factory
 			//JmsFactoryFactory ff = JmsFactoryFactory.getInstance(WMQConstants.WMQ_PROVIDER);
 			JmsConnectionFactory cf = createJMSConnectionFactory(); //ff.createConnectionFactory();

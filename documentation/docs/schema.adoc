@@ -1,0 +1,17 @@
+
+
+[ditaa]
+----
+                  +-------------+
+                  |    RTCMS    |---------------+
+                  | API Service |               |
+                  +-------------+               | changees
+                         |                      |
+                         |card registration     |
+                         |                      |
+                         v                      v
+                  /------+------\        /--------------\
+                  +     DB      +        | change queue |
+                  \-------------/        \--------------/
+----
+include::master_salt.adoc[]

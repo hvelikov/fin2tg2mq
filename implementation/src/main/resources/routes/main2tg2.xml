@@ -5,10 +5,9 @@
     <route id="tg2request" autoStartup="true" trace="true">
         <onException>
             <exception>java.lang.RuntimeException</exception>
-           <!-- <exception>org.springframework.jms.IllegalStateException</exception>-->
             <redeliveryPolicy maximumRedeliveries="0" retryAttemptedLogLevel="WARN" redeliveryDelay="1000"
                               logRetryAttempted="true"
-                              backOffMultiplier="1" useExponentialBackOff="false" logStackTrace="false"/>
+                              backOffMultiplier="1" useExponentialBackOff="false" logStackTrace="true"/>
             </onException>
         <from id="fromClFile" uri="{{fin.basedir}}{{fin.request.subdir}}"/>
         <log message=" ** Begin to send input file: ${header.CamelFileName}"/>
@@ -19,23 +18,19 @@
 
    <!-- Simulate target2 processing. copy input massage to taget2 output queue  -->
     <route id="answer" autoStartup="true" trace="true">
-        <onException>
-            <exception>java.lang.RuntimeException</exception>
-            <redeliveryPolicy maximumRedeliveries="5000" retryAttemptedLogLevel="WARN" redeliveryDelay="{{redelivery.interval}}}"
-                              logRetryAttempted="true"
-                              backOffMultiplier="1" useExponentialBackOff="false" logStackTrace="false"/>
-            </onException>
-        <transacted/>
         <from uri="ibmmq:queue:{{ibm.mq.answer.QueueName}}"/>
-        <log message=" **   Response from tg2 queue name {{ibm.mq.send.QueueName}} --> file:${header.CamelFileName} "/>
+        <setHeader name="CamelFileName">
+            <simple>${date:now:yyyyMMdd-hhmmss}.dat</simple>
+        </setHeader>
         <to uri="{{fin.basedir}}{{fin.response.dir}}"/>
+        <log message=" **   Response message from tg2 in queue name {{ibm.mq.send.QueueName}} --> file:${header.CamelFileName}"/>
     </route>
 
     <!-- Simulate target2 processing. copy input massage to taget2 output queue  -->
-    <route id="processMq" autoStartup="true" trace="true">
+    <!--<route id="processMq" autoStartup="true" trace="true">
         <onException>
             <exception>java.lang.RuntimeException</exception>
-            <!-- <exception>org.springframework.jms.IllegalStateException</exception>-->
+            &lt;!&ndash; <exception>org.springframework.jms.IllegalStateException</exception>&ndash;&gt;
             <redeliveryPolicy maximumRedeliveries="0" retryAttemptedLogLevel="WARN" redeliveryDelay="1000"
                               logRetryAttempted="true"
                               backOffMultiplier="1" useExponentialBackOff="false" logStackTrace="false"/>
@@ -44,7 +39,7 @@
         <from uri="ibmmq:queue:{{ibm.mq.send.QueueName}}"/>
         <to uri="ibmmq:queue:{{ibm.mq.answer.QueueName}}"/>
         <log message=" !!!!! Development! Simulate processing. Move file to answer queue. File:${header.CamelFileName}"/>
-    </route>
+    </route>-->
 
 
 </routes>

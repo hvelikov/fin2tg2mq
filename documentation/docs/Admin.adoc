@@ -1,0 +1,250 @@
+= RTCMS - Admin guide
+Hristo Velikov <hvelikov@comsoft.bg>
+:toc:
+:toclevels: 3
+:icons: font
+:url-quickref: https://docs.asciidoctor.org/asciidoc/latest/syntax-quick-reference/
+:sectnums: auto
+:sectnumlevels: 4
+:doctype: article
+
+<<<
+
+== RTCMS - Admin and description
+=== Directory structure of RTCMS installation
+Directory rtcms-wrapper where rtcms-wrapper was installed have the following structure:
+
+     -- rtcms-wrapper
+        |-- bin
+        |   |-- cryptoParametes.sh
+        |   |-- crypto-property-cli-1.3-runner.jar
+        |   |-- rtcms.java.status
+        |   |-- rtcms.pid
+        |   |-- rtcms.sh
+        |   |-- rtcms.status
+        |   |-- showlog.sh
+        |   `-- wrapper
+        |-- config
+        |   |-- application.properties
+        |   |-- cTokenKey.p12
+        |   `-- rtcms.conf
+        |-- lib
+        |   |-- libwrapper.so
+        |   `-- wrapper.jar
+        |-- logs
+        |   |-- rtcms-log.txt
+        |   |-- rtcms-log.txt.1
+        |   `-- wrapper.log
+        |-- quarkus-app
+
+[%header,cols=2*]
+|===
+| *Directory* | *Description*
+| rtcms-wrapper | RTCMS installation home
+| bin | executable scripts
+| config | config and key stores files for application
+| lib | java wrapper system library and specific jar
+| logs | rtcms logs files. Rotate after restart
+| quarkus-app | rtcms quarkus application files
+|===
+
+RTCMS running in quarkus environment - https://quarkus.io/[Quarkusr].
+
+*What is Quarkus?*
+
+Traditional Java stacks were engineered for monolithic applications with long startup times and large memory requirements in a world where the cloud, containers, and Kubernetes did not exist. Java frameworks needed to evolve to meet the needs of this new world.
+
+Quarkus was created to enable Java developers to create applications for a modern, cloud-native world. Quarkus is a Kubernetes-native Java framework tailored for GraalVM and HotSpot, crafted from best-of-breed Java libraries and standards. The goal is to make Java the leading platform in Kubernetes and serverless environments while offering developers a framework to address a wider range of distributed application architectures.
+
+=== Start/Stop RTCMS
+[source, bash]
+ rtcms.sh [status | start | stop | restart | console]
+ Example:
+  rtcms.sh status
+..
+ Result is:
+   rtCMS vcard processor (not installed) is running: PID:236444, Wrapper:STARTED, Java:STARTED
+
+In this installation RTCMS not used container.
+Java running as linux process with tanuki software service wrapper. For details https://wrapper.tanukisoftware.com/doc/english/home.html[Java Service Wrapper].
+
+=== showlog.sh
+
+Command *_showlog.sh_*  display _rtcms-log.txt_ log file. It display last 40 lines and refresh every 15 seconds. Exit with ^C.
+[source, bash]
+ Example:
+  showlog.sh
+ ^C
+
+=== Get log and config files from server to local desktop
+[source, bash]
+  scp rtcms@172.30.94.233:/home/rtcms/rtcms-wrapper/config/application.properties .
+  scp rtcms@172.30.94.233:/home/rtcms/rtcms-wrapper/logs/rtcms-log.txt .
+
+<<<
+
+=== Service health check
+[source, bash]
+ curl http://172.30.94.233:8443/tokenizer/api/testDS
+
+*Response:*
+[source, json]
+    {
+        "status": "UP",
+        "checks": [
+            {
+                "name": "Database connections health check",
+                "status": "UP",
+                "data": {
+                    "<default>": "UP",
+                    "ccms-camel": "UP",
+                    "queue": "UP"
+                }
+            }
+        ]
+    }
+
+This rest service should be used to verify the availability of *RTCMS application*.
+
+* "status": "*UP*" show that rtcms and all db connection are available.
+* *<default>* is the local RTCMS Oracle DB
+* *ccms-camel* is CCMS db for GCARD_REP replication
+* *queue* - is backup RTCMS database.
+
+This service can be used for monitoring and failover from the network environment.
+
+=== Swagger API
+
+The Swagger API is available on port 9002. The Vcard API is accessed on port 8443.
+
+.Swagger application URL:
+----
+http://localhost:9002/q/swagger-ui/
+----
+It is necessary to provide access through the firewall for access to Swagger application or port forwarding.
+
+.Access през port forwarding:
+ ssh rtcms@172.30.94.233  -L 9002:172.30.94.233:9002
+ http://localhost:9002/q/swagger-ui/
+
+Separately in the *аpidoc* directory, a swagger yaml, html and pdf file with a swagger description is attached.
+
+== RTCMS build and deploy from source
+
+=== Build and copy RTCMS distributive
+Go to project source directory: `cd vcard/implementation` or checkout from GIT
+[source,bash]
+ quarkus build --clean --no-tests
+ cd build
+ zip quarkus-app.zip -r quarkus-app/*
+ #
+ # copy it to rtcms-test ( 172.30.94.233 )
+ scp quarkus-app.zip rtcms@172.30.94.233:/home/rtcms/rtcms-wrapper/quarkus-app-v1.48.zip
+
+Optional if keystore or config file deploy:
+[source, bash]
+    copy CaSys config file if necessary
+    scp ../Installation/rtcms-wrapper/config/application.properties rtcms@172.30.94.233:/home/rtcms/rtcms-wrapper/config/
+    copy CaSys keystore file
+    scp ../Installation/keystore/cTokenKey.p12 rtcms@172.30.94.233:/home/rtcms/rtcms-wrapper/config/
+
+==== Connect to RTMS test server and install new version
+[source, bash]
+ ssh rtcms@172.30.94.233
+ cd rtcms-wrapper
+ rtcms.sh stop
+ showlog.sh
+ rm -rf quarkus-app
+ unzip quarkus-app-v1.48.zip
+ rtcms.sh start
+ showlog.sh
+
+==== Build Docker container (if RTCMS running in Docker container)
+[source, bash]
+ quarkus build --clean --no-tests
+ docker build -f src/main/docker/Dockerfile.jvm -t vcard .
+ docker stop vcard
+ docker rm vcard
+ docker run -d -i --name vcard --hostname vcard \
+       -p 9443:8443 -p 8002:9002 --network appnet  vcard
+
+== Production installаtion
+
+[%header,cols=3*]
+|===
+| *Server name* | *IP addres* | *Discription*
+| RTCMSP | 172.30.94.231 | Primery Server
+| RTCMSB | 172.30.94.232 | Backup Server
+|===
+
+ Linux pwd: P@55RTcm5!
+ Password not used for administration of RTCMS.
+
+=== Initial installation to Production servers
+
+==== Create ssh keys
+.Create in rtcms1 and rtcms2 and exchange it to login without ssh password.
+[source, bash]
+  ssh rtcms@rtcms1
+  ssh-keygen -t rsa -b 2048
+  ssh-copy-id rtcms@rtcms2
+  ssh-keygen -t rsa -b 2048
+  ssh-copy-id rtcms@rtcms1
+
+==== Initial copy and configs from test server
+----
+# Login to rtcms-test and copy public keys
+ssh-keygen -t rsa -b 2048
+ssh-copy-id rtcms@rtcms1
+ssh-copy-id rtcms@rtcms2
+
+# Copy installation files and envirmont to rtcms1 and rtcms2
+scp .bash_profile rtcms@172.30.94.231://home/rtcms
+scp .bash_profile rtcms@172.30.94.232://home/rtcms
+scp jdk-17.0.9.tgz rtcms@172.30.94.231://home/rtcms
+scp jdk-17.0.9.tgz rtcms@172.30.94.231://home/rtcms
+scp rtcms-wrapper.tgz rtcms@172.30.94.231://home/rtcms
+scp rtcms-wrapper.tgz rtcms@172.30.94.232://home/rtcms
+scp .deltaspike rtcms@172.30.94.231://home/rtcms
+scp .deltaspike rtcms@172.30.94.232://home/rtcms
+scp .bash_profile rtcms@172.30.94.231://home/rtcms
+scp .bash_profile rtcms@172.30.94.232://home/rtcms
+----
+
+==== Install to rtcms1
+[source, bash]
+ # Login to 172.30.94.231 and extract programs (jdk and rtcms):
+    ssh rtcms@172.30.94.231
+    tar xzvf jdk-17.0.9.tgz
+    tar xzvf rtcms-wrapper.tgz
+
+=== Install new version
+
+After installation and test in rtcms-test server, the new version of RTCMS is copied and installed on the Production and Backup servers.
+Instalation of test server is described in section 2.1.1
+
+[NOTE]
+The version for Primary and Backup servers is identical. The difference is only in the configuration in *appication.properties*.
+Running showlog.sh is to verify that the RTCMS service has started correctly.
+
+[source, bash]
+ #
+ # Copy distribution to RTCMSP server from test server
+ #
+ ssh rtcms@172.30.94.233
+ cd rtcms-wrapper
+ scp quarkus-app-v1.48.zip rtcms@172.30.94.231:/home/rtcms/rtcms-wrapper
+ #
+ # Login to RTCMSP and install new version
+ #
+ ssh rtcms@172.30.94.231
+ cd rtcms-wrapper
+ rtcms.sh stop
+ rm -rf quarkus-app
+ unzip quarkus-app-v1.48.zip
+ rtcms.sh start
+ showlog.sh
+
+include::database.adoc[]
+
+include::master_salt.adoc[]

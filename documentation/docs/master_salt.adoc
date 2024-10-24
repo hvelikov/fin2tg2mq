@@ -1,0 +1,97 @@
+== Encrypt parameters
+
+=== Master password и master salt
+
+A hash of *_Master password_* is used to encrypt parameter values
+in the *application.properties* config file. It is known only to the administrator who created it.
+
+The hash of *_Master salt_* is used to encrypt the hash of *_Master password_*,
+to store on disk along with the hashed hash of the _Master salt_.
+
+Master salt is set in the applications and that's it "the secret of the application".
+Can be a constant or dynamically determined during application execution. Initially it may be not known to the executable program.
+Such Master salt, for example, is a hash of the IP address of the VM, the user name under which it works
+and the application etc.
+
+In the directory ~/.deltaspike is the file _master.hash_ containing the master password and master salt.
+For more details see the link: https://deltaspike.apache.org/documentation/encryption.html[DeltaSpike Crypto Mechanism.]
+
+[NOTE]
+*_Master password_* and *_Master salt_* are already generated in the current installation.
+
+.*Major secrets are:*
+----
+Master password is: CaSys_j2ee01
+Master(application) salt is: rtcmsSystem
+----
+
+*As a general rule, encrypted configuration parameters value is appear surrounded by "$ENC(...)"*.
+You can compute this values using the CLI command.
+
+=== Encrypt parameters with cryptoParametes.sh
+
+The cryptoParametes.sh command is used to generate master secrets and encrypt value of parameters.
+
+.An example of generate encrypted value of datasource password #rtcms-test#
+[source, bash]
+cryptoParametes.sh encrypt -p -s
+Enter text: ********
+Enter master salt: ********
+INFO  Encrypted secret is ecb6f2a4ad759d6a173bfbaf554a11c6
+
+.Example to setting encrypted password for datasource in  *application.properties*.
+[source, bash]
+quarkus.datasource.password=$ENC(ecb6f2a4ad759d6a173bfbaf554a11c6)
+
+
+### Details of command cryptoParametes.sh
+
+[source,bash]
+.Example display subcommands
+--
+cryptoParametes.sh -h
+
+INFO  The application is starting. Version 1.0
+Usage: cryptoParameters [-hV] Commands
+  -h, --help      Show this help message and exit.
+  -V, --version   Print version information and exit.
+
+Commands:
+  encode   Create and hash master password and master salt
+  encrypt  Encrypt a secret with a master password
+--
+
+
+[source,bash]
+.Example display subcommand parameters
+--
+cryptoParametes.sh encode -h
+
+INFO  The application is starting. Version 1.0
+Usage: cryptoParameters encode [-f] -p -s
+Create and hash master password and master salt
+  -f, --overwrite        Force overwrite
+* -p, --masterPassword   create yourMasterPassword.
+* -s, --masterSalt       create Application masterSalt.
+
+cryptoParametes.sh encrypt -h
+INFO  The application is starting. Version 1.0
+Missing required options: '--masterSalt', '-plaintext'
+Usage: cryptoParameters encrypt -p -s
+Encrypt a secret with a master password
+* -p, -plaintext     encrypt a secret with a previously stored masterPassword
+* -s, --masterSalt   Application masterSalt.
+--
+
+==== Create master.hash file with Master password and Master salt
+.Example: Create master.hash file with hashed secrets:
+----
+cryptoParameters encode -p -s
+.Enter master password: ********
+.Enter master salt: ********
+----
+
+.Contents of *~/.deltaspike/master.hash* contains the Master password encrypted hash and the Master salt hash
+`0a51281e6568a178df0f67238bf5f810220fd54c4e7a29cd2ae45fdf0c688162=
+68997211f4bf661825d8284c2432c98b87ba22e487fec91be4ca6dffa7beb1b8d9831199a776ae23ff59d4fe0aa749b56a9c774b6085f6fb0ffd2e6ad6ac3bc9b1247e7965526809481c38026f6b2ec7`
+

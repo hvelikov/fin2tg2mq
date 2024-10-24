@@ -10,7 +10,10 @@ import jakarta.jms.JMSException;
 import jakarta.transaction.TransactionManager;
 import org.apache.camel.component.jms.JmsComponent;
 import org.eclipse.microprofile.config.ConfigProvider;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.springframework.transaction.jta.JtaTransactionManager;
+
+import java.util.Optional;
 
 public class Producers {
     /**
@@ -24,20 +27,35 @@ public class Producers {
     @Identifier("ibmConnectionFactory")
     public ConnectionFactory createXAConnectionFactory(PooledJmsWrapper wrapper) {
         MQXAConnectionFactory mq = new MQXAConnectionFactory();
+        setupMQ(mq);
+        return wrapper.wrapConnectionFactory(mq);
+    }
+
+    private  void setupMQ(MQXAConnectionFactory cf) {
+        Optional<String>  p;
         try {
-            mq.setHostName(ConfigProvider.getConfig().getValue("ibm.mq.host", String.class));
-            mq.setPort(ConfigProvider.getConfig().getValue("ibm.mq.port", Integer.class));
-            mq.setChannel(ConfigProvider.getConfig().getValue("ibm.mq.channel", String.class));
-            mq.setQueueManager(ConfigProvider.getConfig().getValue("ibm.mq.queueManagerName", String.class));
-            mq.setTransportType(WMQConstants.WMQ_CM_CLIENT);
-            mq.setStringProperty(WMQConstants.USERID,
-                    ConfigProvider.getConfig().getValue("ibm.mq.user", String.class));
-            mq.setStringProperty(WMQConstants.PASSWORD,
-                    ConfigProvider.getConfig().getValue("ibm.mq.password", String.class));
+            cf.setHostName(ConfigProvider.getConfig().getValue("ibm.mq.host", String.class));
+            cf.setPort(ConfigProvider.getConfig().getValue("ibm.mq.port", Integer.class));
+            cf.setChannel(ConfigProvider.getConfig().getValue("ibm.mq.channel", String.class));
+            cf.setQueueManager(ConfigProvider.getConfig().getValue("ibm.mq.queueManagerName", String.class));
+
+            p =  ConfigProvider.getConfig().getOptionalValue("ibm.mq.user", String.class);
+            if ( p.isPresent() )
+                cf.setStringProperty(WMQConstants.USERID, p.get());
+            p =  ConfigProvider.getConfig().getOptionalValue("ibm.mq.password", String.class);
+            if(p.isPresent())
+                cf.setStringProperty(WMQConstants.PASSWORD, p.get());
+            cf.setIntProperty(WMQConstants.WMQ_EOQ_TIMEOUT, 15);
+            cf.setStringProperty(WMQConstants.WMQ_APPLICATIONNAME, ConfigProvider.getConfig().getValue("ibm.mq.appName", String.class));
+            cf.setIntProperty(WMQConstants.WMQ_CONNECTION_MODE, WMQConstants.WMQ_CM_CLIENT); // mq.setTransportType(WMQConstants.WMQ_CM_CLIENT);
+
+            Optional<String> ov = ConfigProvider.getConfig().getOptionalValue("ibm.ssl.cipher", String.class);
+            if(ov.isPresent())
+                    cf.setStringProperty(WMQConstants.WMQ_SSL_CIPHER_SUITE, ov.get());
+
         } catch (JMSException e) {
             throw new RuntimeException("Unable to create IBM MQ Connection Factory", e);
         }
-        return wrapper.wrapConnectionFactory(mq);
     }
 
     /**

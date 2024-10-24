@@ -11,15 +11,23 @@
 ## Console
   https://192.168.22.12:9443/ibmmq/console
 
-manager QM1
-
 ufx.base=file://C://Borica//UFXtrans//TestData//
 ufx.tmpdir=C://Borica//UFXtrans//TestData//tmp
 ufx.from=input?move=Archive&moveFailed=error&filter=#ufxAntFilter&delay=15000&sortBy=file:modified
 #ufx.from=file:/u01/borkoadm/Data/input?move=done&moveFailed=error&filter=#ufxAntFilter&delay=15000&sortBy=file:name
 #ufx.to=file:/u01/borkoadm/Data/input/archive?fileName=${header.CamelFileName}.gz
 
-ufx.list.from=file://F://Way4AcsTest//input
+
+https://developer.ibm.com/tutorials/mq-secure-msgs-tls/?mhsrc=ibmsearch_a&mhq=WMQConstants
+https://github.com/ibm-messaging/mq-dev-patterns
+
+
+This example contains a FileAct message. You need XMLv2 revision 2 or higher in order to use the File format. The body of the message is the file name of the file to be included.
+<Format>File</Format>
+
+<Body>BatchInput-SnF-FileAct-XMLv2.0.6.payload.txt</Body>
+
+
 
 
 <onException>
@@ -32,3 +40,4 @@ ufx.list.from=file://F://Way4AcsTest//input
             <!--<handled><constant>true</constant></handled>-->
             <!--<rollback markRollbackOnly="true"/>-->
 </onException>
+

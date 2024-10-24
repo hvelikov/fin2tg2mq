@@ -1,0 +1,131 @@
+//:sectnums: auto
+== RTCMS Database schema
+
+=== Connect with sql/plus to DB:
+[source, bash]
+ # connect to test DB
+ sqlplus rtcms/rtcms-test@//localhost:1521/RTCMST
+ #
+ # Connect to Production
+ ssh rtcms@172.30.94.231
+ sqlplus COM_RTCMS[RTCMS]/'COM_Rtcms1p!'@//localhost:1521/rtcmsp
+ #
+ # Connect to Backup
+ ssh rtcms@172.30.94.232
+ sqlplus COM_RTCMS[RTCMS]/'COM_Rtcms2b!'@//localhost:1521/rtcmsb
+
+=== Create Oracle DB RTCMS user script
+[source, oraclesqlplus]
+    -- DROP USER --
+    drop user RTCMS CASCADE;
+    -- USER SQL
+    CREATE USER "RTCMS" IDENTIFIED BY "rtcms-test"
+    DEFAULT TABLESPACE "USERS"
+    TEMPORARY TABLESPACE "TEMP";
+    -- QUOTAS
+    ALTER USER "RTCMS" QUOTA UNLIMITED ON "USERS";
+    -- ROLES
+    GRANT "CONNECT" TO "RTCMS" WITH ADMIN OPTION;
+    GRANT "RESOURCE" TO "RTCMS" WITH ADMIN OPTION;
+    --ALTER USER "RTCMS" DEFAULT ROLE "CONNECT","RESOURCE";
+    grant AQ_ADMINISTRATOR_ROLE to rtcms WITH ADMIN OPTION;
+    -- SYSTEM PRIVILEGES
+    GRANT CREATE VIEW TO "RTCMS" WITH ADMIN OPTION;
+    grant SELECT ON SYS.DBA_RECYCLEBIN TO "RTCMS";
+    GRANT EXECUTE ON dbms_aq TO rtcms;
+    GRANT EXECUTE on DBMS_AQADM to rtcms ;
+    GRANT EXECUTE on DBMS_AQJMS to rtcms ;
+    GRANT EXECUTE ON dbms_aqin TO rtcms;
+
+<<<
+
+=== Main tables and RTCMS service reservation
+
+.RTCMS DB маин tables containing PAN information:
+[%header,cols=2*]
+|===
+| *Tablename* | *Notes*
+| BIN_TABLE | Table *replicated* between Primary and Backup site
+| TOKEN_REGISTRATION | contains details about the registered tokens. Table *replicated* between Primary and Backup
+site
+| GCARD_REP | Table for replication to CCMS DB
+| TOKEN_QTAB | Advance Queue table for JMS messages with localD DB changes
+|===
+
+Any change to BIN_TABLE and TOKEN_REGISTRATION resulting from an RTCMS API call is recorded as a JMS message in TOKEN_QTAB.
+_Backup_ server read change messages from TOKEN_QTAB and applies them to its local RTCMS DB schema.
+Primary RTCMS server has similar behavior, reading changes from primary.
+
+.Both servers are configured to generate local change messages and apply generated messages from other server.
+----
+    # Read changed record from remote queue
+    vcrd.casys.replicte.jms.runconsumer=true
+
+    # Generate changed record to local queue for other server
+    vcrd.casys.replicte.jms.runauditlog=true
+----
+
+=== Synchronization with CCMS
+
+Each of the Primary and Backup servers periodically copy locally created vcard requests from local GCARD_REP to CCMS DB in table with the same name - GCARD_REP.
+After copying them, the GCARD_LOAD() procedure is started.
+
+[NOTE]
+Records older than 30 days are deleted once a day.
+
+.The synchronization and deletion periods are set in *application.properties*.
+----
+    # synchronization interval with CaSys CMS in sec
+    vcard.casys.ccms.synch=30s
+
+    # execute GCARD_LOAD()
+    vcard.casys.ccms.procExec=true
+
+    # run every day at 17h and 15min DELETE GCARD_REP old record < 30 days
+    vcard.casys.ccms.schedule=0+15+17+*+*+?
+    vcard.casys.ccms.delgcard=DELETE GCARD_REP where GCARD_REP.CREATE_DATE < (CURRENT_TIMESTAMP - 30)
+----
+
+== Token generation and protection of card information.
+
+.Tables containing PAN information:
+[%header,cols=3*]
+|===
+| *Tablename* | *Column* | *Protection*
+| *TOKEN_REGISTRATION* | HSM_TOKEN   | Encrypt PAN with AES256
+|  | BANK_TOKEN  | HMac-SHA256 ( BANK_ID+BANK_TOKEN )
+| *GCARD_REP*    | NCRD        | Encrypt PAN with AES256
+|===
+
+The PAN and HMac encryption keys are located in the cTokenKey.p12 keystore.
+
+.*application.properties* the keys and encryption type example:
+
+----
+vcard.casys.keystore=${user.dir}/Installation/keystore/cTokenKey.p12
+vcard.casys.keystore.secret=$ENC(74ec7520478d1c861855b9d2879e5a461)
+
+### HMAC-SHA512 Key - Bank token is hash of bank_id + encrypted pan
+vcard.casys.keystore.hmackey=mtoken512
+
+### AES key - encrypt PAN
+vcard.casys.keystore.tokenkey=tokenkey256
+vcard.casys.keystore.cparams=AES/ECB/PKCS5Padding
+
+### DESEDE 192 bit key. If 3des used for pan encryption
+#vcard.casys.keystore.tokenkey=tokenkey
+#vcard.casys.keystore.cparams=TripleDES/ECB/PKCS5Padding
+----
+
+=== Защита на CVV2
+
+CVV2 is not stored. It is calculated by the HSM on each request.
+
+.HSM config parameters in *application.properties*:
+----
+ #-- HSM parameters --
+vcard.casys.hsm.use=true
+vcard.casys.hsm.ip=172.30.94.110
+vcard.casys.hsm.port=1500
+vcard.casys.hsm.timeout=5000
+----
